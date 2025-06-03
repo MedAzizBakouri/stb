@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+  <enteteDoc>
+    <codeIAT></codeIAT>
+    <dateDec></dateDec>
+    <codeAnnexe></codeAnnexe>
+  </enteteDoc>
+  <transferts>
+    <transfert>
+      <entete>
+        <periodDec></periodDec>
+        <nbrEcritures></nbrEcritures>
+      </entete>
+      <details>
+        <detail>
+          <periodDec></periodDec>
+          <agence></agence>
+          <refDonneur>
+            <typeIdentifiantD></typeIdentifiantD>
+            <codIdentifiantD></codIdentifiantD>
+            <denomD></denomD>
+            <ibanDonOrd></ibanDonOrd>
+            <paysFonds></paysFonds>
+          </refDonneur>
+          <benifiicaire>
+            <typeBenifAsso></typeBenifAsso>
+            <codIdentifiant></codIdentifiant>
+            <numVisa></numVisa>
+            <refJort></refJort>
+            <abrev></abrev>
+            <denomComplAsso></denomComplAsso>
+            <rib></rib>
+          </benifiicaire>
+          <operationTransf>
+            <natOp></natOp>
+            <mntDev></mntDev>
+            <cvMntDin></cvMntDin>
+            <Devise></Devise>
+            <datOp></datOp>
+            <refMsgSwift></refMsgSwift>
+          </operationTransf>
+        </detail>
+      </details>
+    </transfert>
+  </transferts>
+</Document>

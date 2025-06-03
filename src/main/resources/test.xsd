@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:simpleType name="T_Date">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="(0[1-9]|[1-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/\d{4}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Devise">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{3,3}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="T_Mnt_Devise">
+        <xs:restriction base="xs:decimal">
+            <xs:totalDigits value="17"/>
+            <xs:fractionDigits value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="T_Montant">
+        <xs:simpleContent>
+            <xs:extension base="T_Mnt_Devise">
+                <xs:attribute name="Ccy" type="Devise" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name="Document">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="EnteteDoc">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="CodeIAT" minOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation source="Name" xml:lang="Fr">Code IAT</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:pattern value="\d{2}"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="DateDec" type="T_Date" minOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation source="Name" xml:lang="Fr">Date de déclaration</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="CodeAnnexe" minOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation source="Name" xml:lang="Fr">Code Annexe</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:pattern value="[A-Z]{2}-[0-9]{3}"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Transferts">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Transfert" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Entete">
+                                            <xs:complexType>
+                                                <xs:sequence>
+												  <xs:element name="PeriodDec" minOccurs="1">
+													<xs:annotation>
+														<xs:documentation source="Name" xml:lang="Fr">Période de déclaration de transfert </xs:documentation>
+													</xs:annotation>   
+												   <xs:simpleType>
+												  	<xs:restriction base="xs:string">
+												  		<xs:pattern value="(0[1-9]|1[0-2])[0-9]{4}"/>
+												  	</xs:restriction>	
+												    </xs:simpleType>
+                                                  </xs:element>
+                                                  <xs:element name="NbrEcritures" minOccurs="1">
+													<xs:annotation>
+														<xs:documentation source="Name" xml:lang="Fr"> Nombre de ligne de l'enregistrement détail</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+													  <xs:restriction base="xs:string">
+														<xs:pattern value="\d{6}"/>
+													  </xs:restriction>
+													</xs:simpleType>
+                                                  </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    	<xs:element name="Details" >
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element name="Detail" minOccurs="0" maxOccurs="unbounded">
+													<xs:complexType>
+														<xs:sequence>													   
+															 <xs:element name="PeriodDec" minOccurs="1">
+																<xs:annotation>
+																	<xs:documentation source="Name" xml:lang="Fr">Période de déclaration de transfert</xs:documentation>
+																</xs:annotation>
+															 	<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:pattern value="(0[1-9]|1[0-2])[0-9]{4}"/>
+																	</xs:restriction>	
+																</xs:simpleType>
+															  </xs:element>		 
+															  <xs:element name="Agence" minOccurs="1">
+																<xs:annotation>
+																	<xs:documentation source="Name" xml:lang="Fr">Agence a effectué le transfert</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																  <xs:restriction base="xs:string">
+																	<xs:pattern value="\d{3}"/>
+																  </xs:restriction>
+																</xs:simpleType>
+															  </xs:element>										  
+															  <xs:element name="RefDonneur">
+																<xs:complexType>
+																	<xs:sequence>																																			
+																		<xs:element name="TypeIdentifiantD" minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr">Type identifiant donneur d'ordre</xs:documentation>
+																		  </xs:annotation>
+																		  <xs:simpleType>
+																		    <xs:union>
+																		    <xs:simpleType>																			
+																			  <xs:restriction base="xs:string">
+																				  <xs:enumeration value="C">
+																					  <xs:annotation>
+																						<xs:documentation>C = CIN </xs:documentation>
+																					  </xs:annotation>
+																				  </xs:enumeration>
+																				  <xs:enumeration value="P">
+																					  <xs:annotation>
+																						<xs:documentation>P = Passepot</xs:documentation>
+																					  </xs:annotation>
+																				  </xs:enumeration>
+																				  <xs:enumeration value="E">
+																					  <xs:annotation>
+																						<xs:documentation>E = Identifiant Etranger</xs:documentation>
+																					  </xs:annotation>
+																				  </xs:enumeration>
+																				  <xs:enumeration value="D">
+																					  <xs:annotation>
+																						<xs:documentation>D = Matricule fiscal</xs:documentation>
+																					  </xs:annotation>
+																				  </xs:enumeration>
+																			   </xs:restriction>					   
+																		     </xs:simpleType>
+																			 <xs:simpleType>
+																				<xs:restriction base="xs:string">
+																					<xs:length value="0"/> 
+																				</xs:restriction> 
+																			 </xs:simpleType> 
+																		    </xs:union>
+																		   </xs:simpleType>
+																		</xs:element>
+																	    <xs:element name="CodIdentifiantD" minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr">Identifiant du donneur d'ordre </xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:union>
+																					<xs:simpleType>
+																						<xs:restriction base="xs:string" >
+																							<xs:maxLength value="15"/>
+																						</xs:restriction>
+																					</xs:simpleType>
+																					<xs:simpleType>
+																					  <xs:restriction base="xs:string">
+																						  <xs:length value="0"/> 
+																					  </xs:restriction> 
+																				  </xs:simpleType> 
+																				</xs:union>
+																			</xs:simpleType>
+																		</xs:element> 
+																		<xs:element name="DenomD" minOccurs="1">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr">Dénomination du donneur d'ordre  </xs:documentation>
+																			</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string" >
+																						<xs:maxLength value="80"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																		</xs:element> 
+																		<xs:element name="IbanDonOrd" minOccurs="1">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr">IBAN du donneur d'ordre</xs:documentation>
+																			</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string" >
+																						<xs:maxLength value="40"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																		</xs:element> 
+																		
+																		<xs:element name="PaysFonds" minOccurs="1">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr">Pays de provenance des fonds </xs:documentation>
+																			</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string" >
+																						 <xs:pattern value="\d{3}"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																		</xs:element> 
+																	</xs:sequence>														
+																</xs:complexType>
+															   </xs:element>
+															   	  <xs:element name="Benifiicaire">
+																<xs:complexType>
+																	<xs:sequence>																																			
+																		<xs:element name="TypeBenifAsso" minOccurs="1">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr"> Type du beneficiaire </xs:documentation>
+																		  </xs:annotation>
+																		  <xs:simpleType>
+																			  <xs:restriction base="xs:string">
+																				  <xs:enumeration value="NPO">
+																					  <xs:annotation>
+																					  	<xs:documentation> NPO: Association dont l'accès au secteur associatif est soumis au décret-loi 2011-88</xs:documentation>
+																					  </xs:annotation>
+																				  </xs:enumeration>
+																				  <xs:enumeration value="AS">
+																					  <xs:annotation>
+																					  	<xs:documentation>AS: Association dont l'accès au secteur associatif n'est pas soumis au décret-loi 2011-88 (ex syndic, CBF,…)</xs:documentation>
+																					  </xs:annotation>
+																				  </xs:enumeration>
+																			  </xs:restriction>
+																		  </xs:simpleType>
+																		</xs:element>
+																	    <xs:element name="CodIdentifiant" minOccurs="1">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr"> N° Matricle fiscal du bénéficiaire </xs:documentation>
+																			</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string" >
+																						<xs:pattern value="([0-9]{8}|[0-9]{7}[A-Za-z])"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																		</xs:element> 
+																		<xs:element name="NumVisa" minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr"> N°VISA du Ministère de l'Intérieur pour les associations dont la création est antérieure à 2011 </xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:union>
+																					<xs:simpleType>
+																						<xs:restriction base="xs:string" >
+																							<xs:length value="10"/>
+																						</xs:restriction>
+																					</xs:simpleType>
+																					<xs:simpleType>
+																						<xs:restriction base="xs:string">
+																							<xs:length value="0"/> 
+																						</xs:restriction> 
+																					</xs:simpleType> 
+																				</xs:union>
+																			</xs:simpleType>
+																		</xs:element> 
+																		<xs:element name="RefJort" minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr">Indiquer le N°reference JORT </xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:union>
+																					<xs:simpleType>
+																						<xs:restriction base="xs:string" >
+																							<xs:maxLength value="15"/>
+																						</xs:restriction>
+																					</xs:simpleType>
+																					<xs:simpleType>
+																						<xs:restriction base="xs:string">
+																							<xs:length value="0"/> 
+																						</xs:restriction> 
+																					</xs:simpleType> 
+																				</xs:union>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="Abrev" minOccurs="0">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr">Abréviations de la dénomination de l'association</xs:documentation>
+																			</xs:annotation>
+																			<xs:simpleType>
+																				<xs:union>
+																					<xs:simpleType>
+																						<xs:restriction base="xs:string" >
+																							<xs:maxLength value="40"/>
+																						</xs:restriction>
+																					</xs:simpleType>
+																					<xs:simpleType>
+																						<xs:restriction base="xs:string">
+																							<xs:length value="0"/> 
+																						</xs:restriction> 
+																					</xs:simpleType> 
+																				</xs:union>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="DenomComplAsso" minOccurs="1">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr">Dénomination complète de l'association </xs:documentation>
+																			</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string" >
+																						<xs:maxLength value="80"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																		</xs:element> 
+																		<xs:element name="Rib" minOccurs="1">
+																			<xs:annotation>
+																				<xs:documentation source="Name" xml:lang="Fr">RIB du bénéficiaire</xs:documentation>
+																			</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string" >
+																						<xs:length value="20"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																		</xs:element> 																
+																	</xs:sequence>														
+																</xs:complexType>
+															   </xs:element>
+															  <xs:element name="OperationTransf" minOccurs="1">
+																<xs:complexType>
+																	<xs:sequence>
+																	  <xs:element name="NatOp" minOccurs="1">
+																		  <xs:annotation>
+																			<xs:documentation source="Name" xml:lang="Fr">Nature de l’opération selon balance des paiements</xs:documentation>
+																		  </xs:annotation>								  
+																			  <xs:simpleType>
+																				<xs:restriction base="xs:string">
+																					 <xs:pattern value="\d{4}"/>
+																				</xs:restriction> 
+																			  </xs:simpleType> 																			
+																	   </xs:element>																		  
+																	 
+																	  <xs:element name="MntDev" type="T_Montant" minOccurs="1">
+																		  <xs:annotation>
+																			<xs:documentation source="Name" xml:lang="Fr">Montant de l'opération en devises</xs:documentation>
+																		  </xs:annotation>																	
+																	  </xs:element>
+																	   <xs:element name="CVMntDin"  type= "T_Montant" minOccurs="1">
+																		  <xs:annotation>
+																			<xs:documentation source="Name" xml:lang="Fr">CV en dinars du montant de l'opération</xs:documentation>
+																		  </xs:annotation>
+																																	
+																	  </xs:element>
+																	  <xs:element name="DatOp" type="T_Date" minOccurs="1">
+																		  <xs:annotation>
+																			<xs:documentation source="Name" xml:lang="Fr">Date de l'opération</xs:documentation>
+																		  </xs:annotation>					 																	
+																	  </xs:element>
+																	  <xs:element name="RefMsgSwift" minOccurs="0">
+																		  <xs:annotation>
+																			<xs:documentation source="Name" xml:lang="Fr">Reference du message swift</xs:documentation>
+																		  </xs:annotation> 
+																	  	<xs:simpleType>
+																	  		<xs:union>
+																				<xs:simpleType> 
+																					<xs:restriction base="xs:string"> 																					  
+																						<xs:pattern value="\d{20}"/>																				  
+																					</xs:restriction>
+																				</xs:simpleType>
+																	  		  <xs:simpleType>
+																	  				<xs:restriction base="xs:string">
+																	  					<xs:length value="0"/> 
+																	  				</xs:restriction> 
+																	  		  </xs:simpleType> 
+																	  		</xs:union>
+																	  	</xs:simpleType>
+																	  </xs:element>																	  														   																													 																  					   
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>															
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
